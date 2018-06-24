@@ -163,12 +163,6 @@ PRODUCT_PACKAGES += \
     liboverlay \
     libtinyxml
 
-
-# Display / OpenGLES
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.opengles.version=196610 \
-    ro.sf.lcd_density=420
-
 # Doze mode
 PRODUCT_PACKAGES += \
     Doze
