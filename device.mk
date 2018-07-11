@@ -358,11 +358,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/keylayout/synaptics_dsx_s2.kl:system/usr/keylayout/synaptics_dsx_s2.kl \
     $(LOCAL_PATH)/keylayout/synaptics_rmi4_i2c.kl:system/usr/keylayout/synaptics_rmi4_i2c.kl
 
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/display/pp_calib_data_boe_nt35596s_fhd_vdo_dsi_panel.xml:system/etc/pp_calib_data_boe_nt35596s_fhd_vdo_dsi_panel.xml \
-    $(LOCAL_PATH)/display/pp_calib_data_boe_nt36760_fhd_cmd_dsi_panel.xml:system/etc/pp_calib_data_boe_nt36760_fhd_cmd_dsi_panel.xml \
-    $(LOCAL_PATH)/display/pp_calib_data_truly_r69006_fhd_cmd_dsi_panel.xml:system/etc/pp_calib_data_truly_r69006_fhd_cmd_dsi_panel.xml
-
 # SDcard
 PRODUCT_CHARACTERISTICS := nosdcard
 
