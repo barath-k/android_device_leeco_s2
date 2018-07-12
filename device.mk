@@ -96,7 +96,7 @@ PRODUCT_PACKAGES += \
 
 # Assertive Display
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/ad_calib.cfg:system/etc/ad_calib.cfg
+    $(LOCAL_PATH)/configs/ad_calib.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/ad_calib.cfg
 
 # Audio
 PRODUCT_COPY_FILES += \
@@ -209,7 +209,9 @@ PRODUCT_PACKAGES += \
 # GPS
 PRODUCT_PACKAGES += \
     gps.msm8952 \
-    libcurl
+    libcurl \
+    libgnss \
+    libgnsspps
 
 PRODUCT_PACKAGES += \
     flp.conf \
@@ -316,6 +318,9 @@ PRODUCT_PACKAGES += \
 # Wifi
 PRODUCT_PACKAGES += \
     hostapd \
+    libcld80211 \
+    libqsap_sdk \
+    libQWiFiSoftApCfg \
     wpa_supplicant \
     libwpa_client \
     wificond \
@@ -323,10 +328,10 @@ PRODUCT_PACKAGES += \
     wpa_supplicant.conf
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/wifi/hostapd.accept:system/etc/hostapd/hostapd.accept \
-    $(LOCAL_PATH)/wifi/hostapd.deny:system/etc/hostapd/hostapd.deny \
-    $(LOCAL_PATH)/wifi/p2p_supplicant_overlay.conf:system/etc/wifi/p2p_supplicant_overlay.conf \
-    $(LOCAL_PATH)/wifi/wpa_supplicant_overlay.conf:system/etc/wifi/wpa_supplicant_overlay.conf
+    $(LOCAL_PATH)/wifi/hostapd.accept:$(TARGET_COPY_OUT_VENDOR)/etc/hostapd/hostapd.accept \
+    $(LOCAL_PATH)/wifi/hostapd.deny:$(TARGET_COPY_OUT_VENDOR)/etc/hostapd/hostapd.deny \
+    $(LOCAL_PATH)/wifi/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
+    $(LOCAL_PATH)/wifi/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf
 
 PRODUCT_PACKAGES += \
     wcnss_service

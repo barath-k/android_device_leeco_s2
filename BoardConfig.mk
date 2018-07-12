@@ -58,6 +58,9 @@ TARGET_KERNEL_SOURCE := kernel/leeco/msm8976
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
 TARGET_KERNEL_CONFIG := lineage_s2_defconfig
 
+# ANT+
+BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
+
 # Filesystem Config
 TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/config.fs
 
