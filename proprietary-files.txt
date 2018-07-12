@@ -61,12 +61,14 @@ lib/libmpkernel.so
 lib/libmpstream.so
 lib/libmputility.so
 lib/libstlport.so
+vendor/lib/libstlport_sta.so
 vendor/lib/libflash_pmic.so
 vendor/lib/libjpegdhw.so
 vendor/lib/libjpegdmahw.so
 vendor/lib/libjpegehw.so
 vendor/lib/libsta_lib_third_party_libsta_lib_libsta_gyp.so
 vendor/lib/libsta_lib_third_party_staproxy_sta_proxy_loader_gyp.so
+vendor/lib64/libstlport_sta.so
 vendor/lib64/libsta_lib_third_party_libsta_lib_libsta_gyp.so
 vendor/lib64/libsta_lib_third_party_staproxy_sta_proxy_loader_gyp.so
 
@@ -319,8 +321,6 @@ etc/firmware/alipay.b01
 etc/firmware/alipay.b02
 etc/firmware/alipay.b03
 etc/firmware/alipay.mdt
-etc/firmware/DE.o.msm8952
-etc/firmware/DE.o.msm8976
 etc/firmware/dxhdcp2.b00
 etc/firmware/dxhdcp2.b01
 etc/firmware/dxhdcp2.b02
@@ -335,9 +335,3 @@ etc/firmware/fidotap.mdt
 etc/firmware/ice40.bin
 etc/firmware/leia_pfp_470.fw
 etc/firmware/leia_pm4_470.fw
-
-# Haxx
-vendor/lib/libhardware_aaaaaa.so
-vendor/lib/libstlport_sta.so
-vendor/lib64/libhardware_aaaaaa.so
-vendor/lib64/libstlport_sta.so
