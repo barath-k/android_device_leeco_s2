@@ -49,6 +49,7 @@ on init
     chmod 0660 /sys/fs/cgroup/memory/bg/tasks
 
 on post-fs
+    rm /data/logcat.txt
     chmod 0755 /sys/kernel/debug/tracing
 
 on early-boot
@@ -68,6 +69,11 @@ on early-boot
     # Graphics
     chown system graphics /sys/class/graphics/fb0/idle_time
     chmod 0664 /sys/class/graphics/fb0/idle_time
+
+service logcat_debug /system/bin/logcat -b all -f /data/logcat.txt -v threadtime
+    class main
+    user root
+    group system
 
 on boot
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
