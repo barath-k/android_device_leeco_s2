@@ -26,7 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-import init.s2.usb.rc
+import /vendor/etc/init/hw/init.s2.usb.rc
 
 on early-init
     mkdir /firmware 0771 system system
@@ -220,6 +220,43 @@ service wcnss-service /system/bin/wcnss_service
     user system
     group system wifi radio
     oneshot
+
+service imsqmidaemon /vendor/bin/imsqmidaemon
+    class main
+    user system
+    socket ims_qmid stream 0660 system radio
+    group radio net_raw log diag
+    seclabel u:r:ims:s0
+
+service imsdatadaemon /vendor/bin/imsdatadaemon
+    class main
+    user system
+    socket ims_datad stream 0660 system radio
+    group system wifi radio inet net_raw log diag net_admin
+    seclabel u:r:ims:s0
+    disabled
+
+on property:sys.ims.QMI_DAEMON_STATUS=1
+    start imsdatadaemon
+
+service ims_rtp_daemon /vendor/bin/ims_rtp_daemon
+   class main
+   user system
+   socket ims_rtpd stream 0660 system radio
+   group radio net_raw diag log
+   seclabel u:r:hal_imsrtp:s0
+   disabled
+
+service imscmservice /vendor/bin/imscmservice
+   class main
+   user system
+   group radio net_raw diag log
+   seclabel u:r:ims:s0
+   disabled
+
+on property:sys.ims.DATA_DAEMON_STATUS=1
+    start ims_rtp_daemon
+    start imscmservice
 
 service ppd /vendor/bin/mm-pp-daemon
     class late_start

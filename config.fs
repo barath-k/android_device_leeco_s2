@@ -1,10 +1,19 @@
+[AID_QCOM_DIAG]
+value:2950
+
+[AID_RFS]
+value:2951
+
+[AID_RFS_SHARED]
+value:2952
+
 [vendor/bin/qmuxd]
 mode: 0700
 user: AID_RADIO
 group: AID_SHELL
 caps: BLOCK_SUSPEND
 
-[system/bin/mm-qcamera-daemon]
+[vendor/bin/mm-qcamera-daemon]
 mode: 0700
 user: AID_CAMERA
 group: AID_SHELL
@@ -40,7 +49,7 @@ user: AID_SYSTEM
 group: AID_GPS
 caps: NET_BIND_SERVICE
 
-[system/bin/wcnss_filter]
+[vendor/bin/wcnss_filter]
 mode: 0755
 user: AID_BLUETOOTH
 group: AID_BLUETOOTH

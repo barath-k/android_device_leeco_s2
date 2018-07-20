@@ -1,3 +1,6 @@
+#Jan 26 Completed execpt decommonize
+import aptx and wdevine invendor
+
 # ACDB Data
 etc/acdbdata/MTP/msm8952-tomtom-snd-card/MTP_WCD9330_Bluetooth_cal.acdb
 etc/acdbdata/MTP/msm8952-tomtom-snd-card/MTP_WCD9330_General_cal.acdb
@@ -104,9 +107,11 @@ vendor/bin/hci_qcomm_init
 vendor/bin/ftmdaemon
 vendor/lib64/libbtnv.so
 vendor/lib/libbtnv.so
+lib64/libaptX_encoder.so|0cebad28afcf29f931bdc2d24fce2730dc882ecf
+lib/libaptX_encoder.so|984739a0bc968e18f75ced205733fe3f51c2d4f0
 
 # Camera
-bin/mm-qcamera-daemon
+bin/mm-qcamera-daemon:vendor/bin/mm-qcamera-daemon
 lib/libcamera_letv_algo.so
 lib/libLetvCameraImageSDK.so
 lib/libmm-omxcore.so
@@ -919,7 +924,7 @@ vendor/lib/libTimeService.so
 # Widewine
 lib/drm/libfwdlockengine.so
 vendor/lib/drm/libdrmwvmplugin.so
-vendor/lib/mediadrm/libwvdrmengine.so
+vendor/lib/mediadrm/libwvdrmengine.so|66ba66d047044f92eb0eada1faf6a5799ded90ab
 vendor/lib/libwvdrm_L1.so
 vendor/lib/libwvdrm_L3.so
 vendor/lib/libwvm.so

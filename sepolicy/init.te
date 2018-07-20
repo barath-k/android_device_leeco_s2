@@ -1,1 +1,2 @@
 allow init proc:lnk_file { setattr };
+allow init sysfs:lnk_file setattr;

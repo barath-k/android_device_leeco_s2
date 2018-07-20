@@ -25,10 +25,10 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-import init.qcom.ims.rc
-import init.qcom.power.rc
 
-import init.target.rc
+import /vendor/etc/init/hw/init.qcom.power.rc
+
+import /vendor/etc/init/hw/init.target.rc
 
 on early-init
     mount debugfs debugfs /sys/kernel/debug
@@ -56,6 +56,21 @@ on early-boot
     write /sys/kernel/codec_type/boot ${persist.sys.external}
     write /sys/kernel/boot_adsp/boot 1
     chown root audio /sys/kernel/boot_adsp/boot
+
+on fs
+    wait /dev/block/platform/soc.0/${ro.boot.bootdevice}
+    symlink /dev/block/platform/soc.0/${ro.boot.bootdevice} /dev/block/bootdevice
+
+    wait /dev/block/bootdevice
+    mount_all /vendor/etc/fstab.qcom
+    write /proc/sys/vm/swappiness 100
+    mkdir /persist/data 0700 system system
+    restorecon_recursive /persist
+    restorecon_recursive /dsp
+    chown system radio /efs
+    chmod 0771 /efs
+    restorecon_recursive /efs
+
 
 on boot
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
@@ -163,9 +178,9 @@ on boot
     # an ack packet comes out of order
     write /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal 1
 
-    # Set the console loglevel to < KERN_INFO
-    # Set the default message loglevel to KERN_INFO
-    write /proc/sys/kernel/printk "6 6 1 7"
+    # Set the console loglevel to < KERN_WARNING
+    # Set the default message loglevel to KERN_WARNING
+    write /proc/sys/kernel/printk "4 4 1 4"
 
     # Allow access for CCID command/response timeout configuration
     chown system system /sys/module/ccid_bridge/parameters/bulk_msg_timeout
@@ -256,7 +271,7 @@ on post-fs-data
     chown system system /data/fota
 
     # Create /data/time folder for time-services
-    mkdir /data/time/ 0700 system system
+    mkdir /data/vendor/time/ 0700 system system
 
     mkdir /data/audio/ 0770 media audio
 
@@ -296,7 +311,7 @@ service qfintverify /sbin/qfintverify
 service qcomsysd /vendor/bin/qcom-system-daemon
     class main
     user root
-    group root diag
+    group root oem_2950
 
 on property:ro.baseband=msm
     start qmuxd
@@ -360,7 +375,7 @@ service dpmd /system/bin/dpmd
     socket dpmwrapper stream 660 root inet
     group system readproc inet radio wake
 
-service irsc_util /vendor/bin/irsc_util "/etc/sec_config"
+service irsc_util /vendor/bin/irsc_util "vendor/etc/sec_config"
     class main
     user root
     oneshot
@@ -380,10 +395,10 @@ on property:wc_transport.start_hci=true
 on property:wc_transport.start_hci=false
     stop start_hci_filter
 
-service start_hci_filter /system/bin/wcnss_filter
+service start_hci_filter /vendor/bin/wcnss_filter
     class late_start
     user bluetooth
-    group bluetooth diag
+    group bluetooth oem_2950
     seclabel u:r:wcnss_filter:s0
     disabled
 
@@ -393,10 +408,10 @@ on property:wc_transport.start_root=true
 on property:wc_transport.start_root=false
     stop hci_filter_root
 
-service hci_filter_root /system/bin/wcnss_filter
+service hci_filter_root /vendor/bin/wcnss_filter
     class late_start
     user bluetooth
-    group bluetooth diag system
+    group bluetooth oem_2950 system
     seclabel u:r:wcnss_filter:s0
     disabled
 
@@ -423,7 +438,7 @@ on property:bluetooth.hciattach=false
 service ftmd /vendor/bin/logwrapper /vendor/bin/ftmdaemon
     class late_start
     user root
-    group bluetooth net_bt_admin misc diag net_bt
+    group bluetooth net_bt_admin misc oem_2950 net_bt
     disabled
     oneshot
 
@@ -431,7 +446,7 @@ service ftmd /vendor/bin/logwrapper /vendor/bin/ftmdaemon
 service qmuxd /vendor/bin/qmuxd
     class main
     user root
-    group radio audio bluetooth wakelock gps nfc diag
+    group radio audio bluetooth wakelock gps nfc oem_2950
 
 service netmgrd /vendor/bin/netmgrd
     class main
@@ -452,7 +467,7 @@ service ipacm /system/bin/ipacm
 service qti /system/vendor/bin/qti
     class main
     user radio
-    group radio net_raw diag usb net_admin
+    group radio net_raw oem_2950 usb net_admin
     disabled
 
 service sensors /vendor/bin/sensors.qcom
@@ -473,11 +488,11 @@ on property:ro.data.large_tcp_window_size=true
 on property:sys.sysctl.tcp_adv_win_scale=*
     write /proc/sys/net/ipv4/tcp_adv_win_scale ${sys.sysctl.tcp_adv_win_scale}
 
-service wpa_supplicant /system/vendor/bin/hw/wpa_supplicant \
+service wpa_supplicant /vendor/bin/hw/wpa_supplicant \
     -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
-    -I/system/etc/wifi/p2p_supplicant_overlay.conf -N \
+    -I/vendor/etc/wifi/p2p_supplicant_overlay.conf -N \
     -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
-    -I/system/etc/wifi/wpa_supplicant_overlay.conf \
+    -I/vendor/etc/wifi/wpa_supplicant_overlay.conf \
     -O/data/misc/wifi/sockets -puse_p2p_group_interface=1 -dd \
     -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
     # we will start as root and wpa_supplicant will switch to user wifi
@@ -501,7 +516,7 @@ service cnss-daemon /vendor/bin/cnss-daemon -n -l
 service loc_launcher /vendor/bin/loc_launcher
     #loc_launcher will start as root and set its uid to gps
     class late_start
-    group gps inet net_raw diag net_admin wifi
+    group gps inet net_raw oem_2950 net_admin wifi
 
 on property:crypto.driver.load=1
      insmod /system/lib/modules/qce.ko

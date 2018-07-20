@@ -37,7 +37,7 @@ on charger
 
 service charger /charger
     class charger
-    group system graphics
+    group log
     seclabel u:r:charger:s0
 
 on init-cpus
@@ -173,3 +173,6 @@ on property:sys.boot_completed=1
     write /proc/sys/kernel/sched_grp_upmigrate 130
     write /proc/sys/kernel/sched_grp_downmigrate 110
     write /proc/sys/kernel/sched_enable_thread_grouping 1
+	
+on property:dev.bootcomplete=1
+    trigger enable-low-power
