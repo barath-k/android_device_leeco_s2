@@ -1,6 +1,3 @@
-#Jan 26 Completed execpt decommonize
-import aptx and wdevine invendor
-
 # ACDB Data
 etc/acdbdata/MTP/msm8952-tomtom-snd-card/MTP_WCD9330_Bluetooth_cal.acdb
 etc/acdbdata/MTP/msm8952-tomtom-snd-card/MTP_WCD9330_General_cal.acdb
