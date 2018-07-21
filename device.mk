@@ -262,13 +262,8 @@ PRODUCT_PACKAGES += \
     power.qcom
 
 # Ramdisk
-PRODUCT_PACKAGES += \
-    fstab.qcom \
-    init.qcom.rc \
-    init.qcom.sh \
-    init.s2.usb.rc \
-    init.target.rc \
-    ueventd.qcom.rc
+PRODUCT_COPY_FILES += \
+    $(call find-copy-subdir-files,*,${LOCAL_PATH}/rootdir,root)
 
 # RIL
 PRODUCT_PACKAGES += \

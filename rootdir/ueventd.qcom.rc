@@ -26,7 +26,7 @@
 #
 
 # the DIAG device node is not world writable/readable.
-/dev/diag                 0660   system      oem_2950
+/dev/diag                 0660   radio      diag
 
 /dev/genlock              0666   system     system
 /dev/kgsl                 0666   system     system
@@ -119,6 +119,8 @@
 # wlan
 /dev/wcnss_wlan           0660   system     system
 /dev/wcnss_ctrl           0660   system     system
+/dev/video1               0660   system     camera
+/dev/video2               0660   system     camera
 /sys/devices/soc.0/a000000.qcom,wcnss-wlan/net/wlan0/queues/rx-* rps_cpus           0660   system     system
 /sys/devices/soc.0/a000000.qcom,wcnss-wlan/net/p2p0/queues/rx-* rps_cpus            0660   system     system
 /dev/msm_camera/*         0660   system     camera

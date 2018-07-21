@@ -25,10 +25,10 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+import init.qcom.ims.rc
+import init.qcom.power.rc
 
-import /vendor/etc/init/hw/init.qcom.power.rc
-
-import /vendor/etc/init/hw/init.target.rc
+import init.target.rc
 
 on early-init
     mount debugfs debugfs /sys/kernel/debug
@@ -56,21 +56,6 @@ on early-boot
     write /sys/kernel/codec_type/boot ${persist.sys.external}
     write /sys/kernel/boot_adsp/boot 1
     chown root audio /sys/kernel/boot_adsp/boot
-
-on fs
-    wait /dev/block/platform/soc.0/${ro.boot.bootdevice}
-    symlink /dev/block/platform/soc.0/${ro.boot.bootdevice} /dev/block/bootdevice
-
-    wait /dev/block/bootdevice
-    mount_all /vendor/etc/fstab.qcom
-    write /proc/sys/vm/swappiness 100
-    mkdir /persist/data 0700 system system
-    restorecon_recursive /persist
-    restorecon_recursive /dsp
-    chown system radio /efs
-    chmod 0771 /efs
-    restorecon_recursive /efs
-
 
 on boot
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
@@ -178,9 +163,9 @@ on boot
     # an ack packet comes out of order
     write /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal 1
 
-    # Set the console loglevel to < KERN_WARNING
-    # Set the default message loglevel to KERN_WARNING
-    write /proc/sys/kernel/printk "4 4 1 4"
+    # Set the console loglevel to < KERN_INFO
+    # Set the default message loglevel to KERN_INFO
+    write /proc/sys/kernel/printk "6 6 1 7"
 
     # Allow access for CCID command/response timeout configuration
     chown system system /sys/module/ccid_bridge/parameters/bulk_msg_timeout
@@ -311,7 +296,7 @@ service qfintverify /sbin/qfintverify
 service qcomsysd /vendor/bin/qcom-system-daemon
     class main
     user root
-    group root oem_2950
+    group root diag
 
 on property:ro.baseband=msm
     start qmuxd
@@ -398,7 +383,7 @@ on property:wc_transport.start_hci=false
 service start_hci_filter /vendor/bin/wcnss_filter
     class late_start
     user bluetooth
-    group bluetooth oem_2950
+    group bluetooth diag
     seclabel u:r:wcnss_filter:s0
     disabled
 
@@ -411,7 +396,7 @@ on property:wc_transport.start_root=false
 service hci_filter_root /vendor/bin/wcnss_filter
     class late_start
     user bluetooth
-    group bluetooth oem_2950 system
+    group bluetooth diag system
     seclabel u:r:wcnss_filter:s0
     disabled
 
@@ -438,7 +423,7 @@ on property:bluetooth.hciattach=false
 service ftmd /vendor/bin/logwrapper /vendor/bin/ftmdaemon
     class late_start
     user root
-    group bluetooth net_bt_admin misc oem_2950 net_bt
+    group bluetooth net_bt_admin misc diag net_bt
     disabled
     oneshot
 
@@ -446,7 +431,7 @@ service ftmd /vendor/bin/logwrapper /vendor/bin/ftmdaemon
 service qmuxd /vendor/bin/qmuxd
     class main
     user root
-    group radio audio bluetooth wakelock gps nfc oem_2950
+    group radio audio bluetooth wakelock gps nfc diag
 
 service netmgrd /vendor/bin/netmgrd
     class main
@@ -467,7 +452,7 @@ service ipacm /system/bin/ipacm
 service qti /system/vendor/bin/qti
     class main
     user radio
-    group radio net_raw oem_2950 usb net_admin
+    group radio net_raw diag usb net_admin
     disabled
 
 service sensors /vendor/bin/sensors.qcom
@@ -516,7 +501,7 @@ service cnss-daemon /vendor/bin/cnss-daemon -n -l
 service loc_launcher /vendor/bin/loc_launcher
     #loc_launcher will start as root and set its uid to gps
     class late_start
-    group gps inet net_raw oem_2950 net_admin wifi
+    group gps inet net_raw diag net_admin wifi
 
 on property:crypto.driver.load=1
      insmod /system/lib/modules/qce.ko
