@@ -83,15 +83,11 @@ PRODUCT_PACKAGES += \
     audio.r_submix.default \
     audio.usb.default \
     libaudio-resampler \
-    libtinycompress \
-    audiod
-
-PRODUCT_PACKAGES += \
+    libaudioroute \
     libqcompostprocbundle \
-    libvolumelistener \
     libqcomvisualizer \
     libqcomvoiceprocessing \
-    libqcomvoiceprocessingdescriptors \
+    libtinycompress \
     tinymix
 
 # Assertive Display
@@ -128,6 +124,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/com.dsi.ant.antradio_library.xml
 
+# Bluetooth
+PRODUCT_PACKAGES += \
+    libbt-vendor
+
 # Camera
 PRODUCT_PACKAGES += \
     Snap
@@ -140,18 +140,13 @@ PRODUCT_PACKAGES += \
     libmmjpeg_interface
 endif
 
-# Bluetooth
+# Connectivity Engine support (CNE)
 PRODUCT_PACKAGES += \
-    libbt-vendor
+    libcnefeatureconfig
 
-# Netutils
+# DataServices
 PRODUCT_PACKAGES += \
-    netutils-wrapper-1.0 \
-    libandroid_net
-
-# Launcher
-PRODUCT_PACKAGES += \
-    Launcher3
+    librmnetctl
 
 # Display
 PRODUCT_PACKAGES += \
@@ -161,7 +156,8 @@ PRODUCT_PACKAGES += \
     memtrack.msm8952 \
     libgenlock \
     liboverlay \
-    libtinyxml
+    libdisplayconfig \
+    libqdMetaData.system
 
 # Doze mode
 PRODUCT_PACKAGES += \
@@ -178,9 +174,39 @@ PRODUCT_PACKAGES += \
     fingerprint.msm8952 \
     fingerprintd
 
+# For android_filesystem_config.h
+PRODUCT_PACKAGES += \
+    fs_config_files
+
+# GPS
+PRODUCT_PACKAGES += \
+    gps.msm8952 \
+    libcurl \
+    libgnss \
+    libgnsspps
+
+PRODUCT_PACKAGES += \
+    flp.conf \
+    gps.conf \
+    izat.conf \
+    lowi.conf \
+    sap.conf \
+    xtwifi.conf
+
+# HIDL
+PRODUCT_PACKAGES += \
+    android.hidl.base@1.0 \
+    android.hidl.manager@1.0 \
+    android.hidl.manager@1.0-java
+
 # IR
 PRODUCT_PACKAGES += \
     consumerir.msm8952
+
+# IPA Manager
+PRODUCT_PACKAGES += \
+    ipacm \
+    IPACM_cfg.xml
 
 # IRQ
 PRODUCT_COPY_FILES += \
@@ -206,27 +232,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     lights.msm8952
 
-# GPS
-PRODUCT_PACKAGES += \
-    gps.msm8952 \
-    libcurl \
-    libgnss \
-    libgnsspps
-
-PRODUCT_PACKAGES += \
-    flp.conf \
-    gps.conf \
-    izat.conf \
-    lowi.conf \
-    sap.conf \
-    xtwifi.conf
-
-# HIDL
-PRODUCT_PACKAGES += \
-    android.hidl.base@1.0 \
-    android.hidl.manager@1.0 \
-    android.hidl.manager@1.0-java
-
 # LiveDisplay Native
 PRODUCT_PACKAGES += \
     vendor.lineage.livedisplay@1.0-service-sdm
@@ -241,6 +246,12 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_video.xml
+
+# Netutils
+PRODUCT_PACKAGES += \
+    netutils-wrapper-1.0 \
+    android.system.net.netd@1.0 \
+    libandroid_net
 
 # OMX
 PRODUCT_PACKAGES += \
@@ -259,19 +270,15 @@ PRODUCT_PACKAGES += \
     libstagefrighthw \
     libstagefright_soft_flacdec
 
-# IPA Manager
-PRODUCT_PACKAGES += \
-    ipacm \
-    IPACM_cfg.xml
-
-# Power
-PRODUCT_PACKAGES += \
-    power.qcom
-
 # QCOM
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/privapp-permissions-qti.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/privapp-permissions-qti.xml \
     $(LOCAL_PATH)/configs/qti_whitelist.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sysconfig/qti_whitelist.xml
+
+# Qualcomm dependencies
+PRODUCT_PACKAGES += \
+    libtinyxml \
+    libxml2
 
 # Ramdisk
 PRODUCT_COPY_FILES += \
@@ -279,12 +286,7 @@ PRODUCT_COPY_FILES += \
 
 # RIL
 PRODUCT_PACKAGES += \
-    libcnefeatureconfig \
-    librmnetctl \
-    libxml2 \
-    libqsap_sdk \
-    telephony-ext \
-    libminui
+    telephony-ext
 
 PRODUCT_BOOT_JARS += \
     telephony-ext
@@ -318,19 +320,16 @@ PRODUCT_PACKAGES += \
 
 # Wifi
 PRODUCT_PACKAGES += \
-    hostapd \
     libcld80211 \
     libqsap_sdk \
     libQWiFiSoftApCfg \
-    wpa_supplicant \
     libwpa_client \
+    hostapd \
     wificond \
-    wifilogd \
+    wpa_supplicant \
     wpa_supplicant.conf
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/wifi/hostapd.accept:$(TARGET_COPY_OUT_VENDOR)/etc/hostapd/hostapd.accept \
-    $(LOCAL_PATH)/wifi/hostapd.deny:$(TARGET_COPY_OUT_VENDOR)/etc/hostapd/hostapd.deny \
     $(LOCAL_PATH)/wifi/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
     $(LOCAL_PATH)/wifi/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf
 
