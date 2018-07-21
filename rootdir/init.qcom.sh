@@ -438,24 +438,37 @@ echo 1 > /data/vendor/radio/db_check_done
 #
 # Make modem config folder and copy firmware config to that folder for RIL
 #
-if [ -f /data/vendor/radio/ver_info.txt ]; then
-    prev_version_info=`cat /data/vendor/radio/ver_info.txt`
-else
-    prev_version_info=""
-fi
+rm -rf /data/vendor/radio/modem_config/mcfg_sw
+mkdir -p /data/vendor/radio/modem_config/mcfg_sw
+chmod 770 /data/vendor/radio/modem_config
+chmod 770 /data/vendor/radio/modem_config/mcfg_sw
+product_name=`getprop ro.product.name`
 
-cur_version_info=`cat /firmware/verinfo/ver_info.txt`
-if [ ! -f /firmware/verinfo/ver_info.txt -o "$prev_version_info" != "$cur_version_info" ]; then
-    rm -rf /data/vendor/radio/modem_config
-    mkdir /data/vendor/radio/modem_config
-    chmod 770 /data/vendor/radio/modem_config
-    cp -r /firmware/image/modem_pr/mcfg/configs/* /data/vendor/radio/modem_config
-    chown -hR radio.radio /data/vendor/radio/modem_config
-    cp /firmware/verinfo/ver_info.txt /data/vendor/radio/ver_info.txt
-    chown radio.radio /data/vendor/radio/ver_info.txt
-fi
-cp /firmware/image/modem_pr/mbn_ota.txt /data/vendor/radio/modem_config
-chown radio.radio /data/vendor/radio/modem_config/mbn_ota.txt
+case "$product_name" in
+    "Le2_CN" | "Le2_CU" | "Le2_CM" | "Le2_HK")
+    cp -r /firmware/image/modem_pr/mcfg/configs/mcfg_sw/generic/mbn_ota/cmcc.mbn /data/vendor/radio/modem_config/mcfg_sw
+    cp -r /firmware/image/modem_pr/mcfg/configs/mcfg_sw/generic/mbn_ota/ct.mbn /data/vendor/radio/modem_config/mcfg_sw
+    cp -r /firmware/image/modem_pr/mcfg/configs/mcfg_sw/generic/mbn_ota/cu.mbn /data/vendor/radio/modem_config/mcfg_sw
+    cp -r /firmware/image/modem_pr/mcfg/configs/mcfg_sw/generic/mbn_ota/row.mbn /data/vendor/radio/modem_config/mcfg_sw
+    ;;
+    "Le2_NA")
+    cp -r /firmware/image/modem_pr/mcfg/configs/mcfg_sw/generic/mbn_ota/att.mbn /data/vendor/radio/modem_config/mcfg_sw
+    cp -r /firmware/image/modem_pr/mcfg/configs/mcfg_sw/generic/mbn_ota/tmo.mbn /data/vendor/radio/modem_config/mcfg_sw
+    cp -r /firmware/image/modem_pr/mcfg/configs/mcfg_sw/generic/mbn_ota/row.mbn /data/vendor/radio/modem_config/mcfg_sw
+    ;;
+    "Le2_WW")
+    cp -r /firmware/image/modem_pr/mcfg/configs/mcfg_sw/generic/mbn_ota/rjil.mbn /data/vendor/radio/modem_config/mcfg_sw
+    cp -r /firmware/image/modem_pr/mcfg/configs/mcfg_sw/generic/mbn_ota/row.mbn /data/vendor/radio/modem_config/mcfg_sw
+    cp -r /firmware/image/modem_pr/mcfg/configs/mcfg_sw/generic/mbn_ota/cmcc.mbn /data/vendor/radio/modem_config/mcfg_sw
+    cp -r /firmware/image/modem_pr/mcfg/configs/mcfg_sw/generic/mbn_ota/cu.mbn /data/vendor/radio/modem_config/mcfg_sw
+    ;;
+    *)
+    cp -r /firmware/image/modem_pr/mcfg/configs/mcfg_sw/generic/mbn_ota/row.mbn /data/vendor/radio/modem_config/mcfg_sw
+    ;;
+esac
+chmod 770 /data/vendor/radio/modem_config/mcfg_sw/*
+chown -hR radio.radio /data/vendor/radio/modem_config
+chown -hR radio.radio /data/vendor/radio/modem_config/mcfg_sw
 echo 1 > /data/vendor/radio/copy_complete
 
 #check build variant for printk logging
