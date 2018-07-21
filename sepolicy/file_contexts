@@ -9,10 +9,6 @@
 # Radio
 /data/misc/radio/qcril.db                                   u:object_r:nv_data_file:s0
 
-# Bluetooth
-/sys/devices/bt_qca6174\.[0-9]+/extldo                          u:object_r:sysfs_bluetooth_writable:s0
-/sys/devices/bt_qca6174\.[0-9]+/rfkill/rfkill0/state            u:object_r:sysfs_bluetooth_writable:s0
-
 # Legacy (TODO: move to vendor)
 /sbin/qfipsverify                                           u:object_r:sectest_exec:s0
 /system/bin/ipacm                                           u:object_r:ipacm_exec:s0
