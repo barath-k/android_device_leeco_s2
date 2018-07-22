@@ -115,3 +115,8 @@ PRODUCT_PACKAGES += \
     android.hardware.health@1.0-convert \
     android.hardware.health@1.0-service \
     android.hardware.health@1.0
+
+# LiveDisplay native
+PRODUCT_PACKAGES += \
+   vendor.lineage.livedisplay@1.0-service-sdm
+
