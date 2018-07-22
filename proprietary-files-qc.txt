@@ -276,6 +276,8 @@ vendor/lib64/librs_adreno.so
 vendor/lib64/librs_adreno_sha1.so
 vendor/lib64/libscale.so
 vendor/lib64/libsd_sdk_display.so
+-vendor/lib/libsdm-disp-vndapis.so
+-vendor/lib64/libsdm-disp-vndapis.so
 
 # Graphics firmware
 etc/firmware/a530_pfp.fw
