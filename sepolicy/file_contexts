@@ -22,3 +22,4 @@
 /dev/goodix_fp                                             u:object_r:goodix_device:s0
 /data/goodix(/.*)?                                         u:object_r:goodix_data_file:s0
 /dev/i2c_smartpa                                           u:object_r:smartpa_device:s0
+/system/vendor/bin/wcnss_filter                            u:object_r:wcnss_filter_exec:s0
