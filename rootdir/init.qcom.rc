@@ -38,7 +38,6 @@ on init
     mkdir /persist 0771 root system
 
     # Support legacy paths
-    symlink /sdcard /mnt/sdcard
     symlink /sdcard /storage/sdcard0
 
     # Create cgroup mount point for memory
@@ -402,12 +401,15 @@ on post-fs-data
     mkdir /data/system/swap 0770 root system
     chmod 2770 /data/system/swap
 
-    # set aggressive read ahead for dm-0 and dm-1 during boot up
-    write /sys/block/dm-0/queue/read_ahead_kb 2048
-    write /sys/block/dm-1/queue/read_ahead_kb 2048
 
     # Create vpp directory
     mkdir /data/vendor/vpp 0770 media media
+	
+	start qmuxd
+    start ipacm-diag
+    start ipacm
+	start qti
+    start netmgrd
 
 service iop /system/vendor/bin/iop
     class main
@@ -418,15 +420,13 @@ service iop /system/vendor/bin/iop
 
 on property:sys.boot_completed=1
     write /dev/kmsg "Boot completed "
-    #Reset read ahead for dm-0 and dm-1 to 512kb
-    write /sys/block/dm-0/queue/read_ahead_kb 512
-    write /sys/block/dm-1/queue/read_ahead_kb 512
     #WDSP FW boot sysfs node used by STHAL
     chown media audio /sys/kernel/wdsp0/boot
     chown media audio /sys/kernel/wcd_cpe0/fw_name
 
 on property:vold.decrypt=trigger_restart_framework
     start wcnss-service
+
 
 service cnd /system/vendor/bin/cnd
     class main
@@ -446,8 +446,7 @@ service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
 service rmt_storage /vendor/bin/rmt_storage
     class core
     user root
-    shutdown critical
-    ioprio rt 0
+    group root system wakelock
 
 service tftp_server /vendor/bin/tftp_server
    class core
@@ -465,6 +464,19 @@ service start_hci_filter system/vendor/bin/wcnss_filter
     group bluetooth diag system wakelock
     seclabel u:r:wcnss_filter:s0
     disabled
+	
+on property:wc_transport.start_root=true
+    start hci_filter_root
+
+on property:wc_transport.start_root=false
+    stop hci_filter_root
+
+service hci_filter_root /system/bin/wcnss_filter
+    class late_start
+    user bluetooth
+    group bluetooth oem_2901 system
+    seclabel u:r:wcnss_filter:s0
+    disabled
 
 service hciattach /system/vendor/bin/hci_qcomm_init -e
     class late_start
@@ -480,31 +492,38 @@ on property:bluetooth.hciattach=false
     setprop bluetooth.status off
 
 # QMUX must be in multiple groups to support external process connections
-service qmuxd /system/vendor/bin/qmuxd
+service qmuxd /vendor/bin/qmuxd
     class main
     user root
     group radio audio bluetooth gps nfc diag
+	disabled
     
 service netmgrd /system/vendor/bin/netmgrd
     class main
+    user root
+    group root wifi wakelock radio inet
+    disabled
     
 service ipacm-diag /system/vendor/bin/ipacm-diag
     class main
     user radio
     socket ipacm_log_file dgram 660 radio radio
     group radio diag oem_2901
+	disabled
     
 service ipacm /system/vendor/bin/ipacm
     class main
     user radio
     group radio inet
+	disabled
     
 service qti /system/vendor/bin/qti
     class main
     user radio
     group radio oem_2901 diag usb net_admin
+	disabled
     
-service sensors /vendor/bin/sensors.qcom
+service sensors /system/vendor/bin/sensors.qcom
     class core
     user root
     group root
@@ -542,16 +561,23 @@ service cnss_diag /system/vendor/bin/cnss_diag -q -f
     user system
     group system wifi inet net_admin sdcard_rw media_rw diag
     oneshot
+	# cnss diag cause power consumption bigger sometimes, so disable it until solve it
+    disabled
 
 service cnss-daemon /system/vendor/bin/cnss-daemon -n -l
     class late_start
     user system
     group system inet net_admin wifi
+	
+on property:sys.shutdown.requested=*
+stop cnss-daemon
 
 service loc_launcher /system/vendor/bin/loc_launcher
     #loc_launcher will start as root and set its uid to gps
     class late_start
     group gps inet diag wifi
+	#location launcher needs updated gps hal,so disabled temporarily
+    disabled
 
 service qcom-sh /vendor/bin/sh /init.qcom.sh
     class late_start
@@ -564,6 +590,11 @@ service qcom-post-boot /vendor/bin/sh /init.qcom.post_boot.sh
     user root
     seclabel u:r:qti_init_shell:s0
     disabled
+    oneshot
+	
+service baseband-sh /vendor/bin/sh /init.baseband.sh
+    class late_start
+    user root
     oneshot
 
 on property:sys.boot_completed=1
@@ -578,6 +609,12 @@ on property:ro.data.large_tcp_window_size=true
     # Adjust socket buffer to enlarge TCP receive window for high bandwidth (e.g. DO-RevB)
     write /proc/sys/net/ipv4/tcp_adv_win_scale 2
 
+service ril-daemon /vendor/bin/hw/rild
+    class main
+    user radio
+    group radio cache inet misc audio log readproc wakelock oem_2901 net_raw
+    capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
+
 service ril-daemon2 /vendor/bin/hw/rild -c 2
     class main
     socket rild2 stream 660 root radio
@@ -586,6 +623,9 @@ service ril-daemon2 /vendor/bin/hw/rild -c 2
     disabled
     group radio cache inet misc audio sdcard_r sdcard_rw diag oem_2901 log
     capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
+
+on property:persist.radio.multisim.config=dsds
+    enable ril-daemon2
 
 service charger /charger
     class charger
