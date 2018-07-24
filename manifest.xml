@@ -315,7 +315,7 @@
         <version>1.0</version>
         <interface>
             <name>IdpmQmi</name>
-            <instance>dpmQmiService</instance>
+            <instance>default</instance>
         </interface>
     </hal>
     <hal format="hidl">
@@ -378,7 +378,7 @@
         <version>1.0</version>
         <interface>
             <name>ILocHidlGnss</name>
-            <instance>gnss_vendor</instance>
+            <instance>default</instance>
         </interface>
     </hal>
     <hal format="hidl">
