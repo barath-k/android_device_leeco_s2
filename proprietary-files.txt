@@ -41,7 +41,7 @@ etc/settings/mono_qcom.cnt
 -lib64/libtfa9890.so
 
 # Camera
-bin/mm-qcamera-daemon:vendor/bin/mm-qcamera-daemon
+bin/mm-qcamera-daemon
 lib/libcamera_letv_algo.so
 lib/libLetvCameraImageSDK.so
 lib/libmm-omxcore.so

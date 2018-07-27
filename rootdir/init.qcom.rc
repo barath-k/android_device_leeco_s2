@@ -359,6 +359,11 @@ service dpmd /system/bin/dpmd
     socket tcm  stream 660 root inet
     socket dpmwrapper stream 660 root inet
     group system readproc inet radio wake
+	
+service dpmQmiMgr /system/vendor/bin/dpmQmiMgr
+    class main
+    user system
+    group system
 
 service irsc_util /vendor/bin/irsc_util "vendor/etc/sec_config"
     class main
