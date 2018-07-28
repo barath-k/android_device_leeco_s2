@@ -155,7 +155,7 @@ on post-fs-data
     chmod 666 /sys/class/power_supply/battery/le_quick_charge_mode
 
 # start camera server as daemon
-service qcamerasvr /system/vendor/bin/mm-qcamera-daemon
+service qcamerasvr /system/bin/mm-qcamera-daemon
     class late_start
     user camera
     group camera system inet input graphics
